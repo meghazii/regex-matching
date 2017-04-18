@@ -13,25 +13,13 @@ struct List{
   int n;
 };
 
-struct Expr{
-  int debut;
-  int fin;
-};
-
-struct ListEx{
-  struct Expr e[256];
-  int taille;
-  int unclosed[256];
-  int nUnclosed;
-};
-
 void setUp();
 
 void addState(struct List *l, struct State *s);
 
 struct List* startList(struct State *s, struct List *l);
 
-void match(struct List *cList, int c, struct List *nList, struct ListEx *eList, int i);
+void match(struct List *cList, int c, struct List *nList);
 
 int matched(struct List *l);
 
