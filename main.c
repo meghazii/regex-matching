@@ -36,24 +36,21 @@ int main(int argc, char** argv){
 
   eList.taille = 0;
   eList.nUnclosed = 0;
-  
-  cList = startList(&s2, &l1);
+  cList = startList(&s1, &l1);
   nList = &l2;
   int i = 0;
   for(; *s; s++){
-    match(cList, *s, nList, &eList, i);
-  
-    if(*s != '(' && *s != ')'){
-      t = cList;
-      cList = nList;
-      nList = t;
-    }
+    match(cList, *s, nList, t, &eList, i);
+    t = cList;
+    cList = nList;
+    nList = t;
     i++;
   }
   if(matched(cList) == 1){
     printf("Succes\n");
+    printf("%d\n", eList.taille);
     for(i = 0; i < eList.taille; i++){
-      printf("Expression : %d -> %d\n", eList.e[i].debut, eList.e[i].fin);
+      printf("Expression %d -> %d\n", eList.e[i].debut, eList.e[i].fin);
     }
   }
   else printf("Failure\n");
@@ -63,32 +60,35 @@ int main(int argc, char** argv){
 
 void setUp(){
   //AUTOMATE TEST
+  //(ab)(ba)
   
   s9.c = 257;
   
-  //s8.c = ')';
-  // s8.out = &s9;
+  s8.c = ')';
+  s8.out = &s9;
   
   s7.c = 'a';
-  s7.out = &s9;
+  s7.out = &s8;
   
   s6.c = 'b';
   s6.out  = &s7;
   
-  //s5.c = '(';
-  //s5.out = &s6;
+  s5.c = '(';
+  s5.out = &s6;
     
-  //s4.c = ')';
-  //s4.out = &s5;
+  s4.c = ')';
+  s4.out = &s5;
   
   s3.c = 'b';
-  s3.out = &s6;
+  s3.out = &s4;
 
   s2.c = 'a';
   s2.out = &s3;
   
-  //s1.c = '(';
-  //s1.out = &s2;
+  s1.c = '(';
+  s1.out = &s2;
+
+  s0.out = &s1;
 }
 
 void addState(struct List *l, struct State *s){
@@ -102,7 +102,7 @@ void addState(struct List *l, struct State *s){
     addState(l,s->out1);
     return;
   }
-  l->s[l->n++] = s;
+x  l->s[l->n++] = s;
 }
 
 struct List* startList(struct State *s, struct List *l){
@@ -113,32 +113,44 @@ struct List* startList(struct State *s, struct List *l){
   return l;
 }
 
-void match(struct List *cList, int c, struct List *nList, struct ListEx *eList, int a){
-  //ajoute les etats suivants de chacun des etats de la liste actuelle a la liste suivant
-  // ssi le caractere c correspond au caractere de l'etat actuel
-
-  if(c == '('){
-    eList->e[eList->taille].debut = a;
-    eList->unclosed[eList->nUnclosed] = eList->taille;
-    eList->taille++;
-    eList->nUnclosed++;
-
-  }
-  else if(c == ')'){
-    eList->e[eList->unclosed[eList->nUnclosed-1]].fin = a;
-    eList->nUnclosed--;
-  }
-  else{
-    int i = 0;
-    listid++;
-    nList->n = 0;
-    for(i = 0; i < cList->n; i++){
-      if(cList->s[i]->c == c) {
-	addState(nList, cList->s[i]->out);
-      }
+void match(struct List *cList, int c, struct List *nList, struct List *t, struct ListEx *eList, int a){
+//ajoute les etats suivants de chacun des etats de la liste actuelle a la liste suivant
+// ssi le caractere c correspond au caractere de l'etat actuel
+  int i = 0;
+  listid++;
+  nList->n = 0;
+  printf("test : %c - > %c\n",c, cList->s[0]->c);
+  for(i = 0; i < cList->n; i++){
+    if(cList->s[i]->c == '('){
+      printf("bonjour\n");
+      eList->e[eList->taille].debut = a;
+      eList->unclosed[eList->nUnclosed] = eList->taille;
+      eList->taille++; eList->nUnclosed++;
+      
+      addState(nList, cList->s[i]->out);
+      t = cList;
+      cList = nList;
+      nList = t;
+      match(cList, c, nList, t, eList, a);
+    }
+    else if(cList->s[i]->c == ')'){
+      printf("bonjour1\n");
+      eList->e[eList->unclosed[eList->nUnclosed-1]].fin = a;
+      eList->nUnclosed--;
+      
+      addState(nList, cList->s[i]->out);
+      t = cList;
+      cList = nList;
+      nList = t;
+      match(cList, c, nList, t, eList, a);
+    }
+    else if(cList->s[i]->c == c) {
+      printf("bonjour2\n"); 
+      addState(nList, cList->s[i]->out);
     }
   }
 }
+
 
 int matched(struct List *l){
   // Test si l'etat final est present dans la liste actuelle
