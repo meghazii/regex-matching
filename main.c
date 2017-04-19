@@ -40,10 +40,12 @@ int main(int argc, char** argv){
   nList = &l2;
   int i = 0;
   for(; *s; s++){
-    match(cList, *s, nList, t, &eList, i);
+    match(cList, *s, nList,t, &eList, i);
+    printf("cList-N : %d, nList-N : %d\n", cList->n, nList->n);
     t = cList;
     cList = nList;
     nList = t;
+    
     i++;
   }
   if(matched(cList) == 1){
@@ -71,7 +73,7 @@ void setUp(){
   s7.out = &s8;
   
   s6.c = 'b';
-  s6.out  = &s7;
+  s6.out = &s7;
   
   s5.c = '(';
   s5.out = &s6;
@@ -102,7 +104,7 @@ void addState(struct List *l, struct State *s){
     addState(l,s->out1);
     return;
   }
-x  l->s[l->n++] = s;
+  l->s[l->n++] = s;
 }
 
 struct List* startList(struct State *s, struct List *l){
@@ -113,16 +115,15 @@ struct List* startList(struct State *s, struct List *l){
   return l;
 }
 
-void match(struct List *cList, int c, struct List *nList, struct List *t, struct ListEx *eList, int a){
+int match(struct List *cList, int c, struct List *nList, struct List *t, struct ListEx *eList, int a){
 //ajoute les etats suivants de chacun des etats de la liste actuelle a la liste suivant
 // ssi le caractere c correspond au caractere de l'etat actuel
-  int i = 0;
+  int i = 0, done = 0;
   listid++;
   nList->n = 0;
-  printf("test : %c - > %c\n",c, cList->s[0]->c);
+  printf(" test : %c -> %c\n", cList->s[0]->c, c);
   for(i = 0; i < cList->n; i++){
     if(cList->s[i]->c == '('){
-      printf("bonjour\n");
       eList->e[eList->taille].debut = a;
       eList->unclosed[eList->nUnclosed] = eList->taille;
       eList->taille++; eList->nUnclosed++;
@@ -131,24 +132,26 @@ void match(struct List *cList, int c, struct List *nList, struct List *t, struct
       t = cList;
       cList = nList;
       nList = t;
-      match(cList, c, nList, t, eList, a);
+      match(cList, c, nList,t, eList, i);
+       
     }
     else if(cList->s[i]->c == ')'){
-      printf("bonjour1\n");
       eList->e[eList->unclosed[eList->nUnclosed-1]].fin = a;
       eList->nUnclosed--;
-      
+
       addState(nList, cList->s[i]->out);
       t = cList;
       cList = nList;
       nList = t;
-      match(cList, c, nList, t, eList, a);
+      match(cList, c, nList,t, eList, i);
+      
     }
     else if(cList->s[i]->c == c) {
-      printf("bonjour2\n"); 
       addState(nList, cList->s[i]->out);
+      done = 1;
     }
   }
+  return done;
 }
 
 
@@ -160,7 +163,6 @@ int matched(struct List *l){
     if(l->s[i]->c == 257){
       return 1;
     }
-    return 0;
   }
   return 0;
 }
