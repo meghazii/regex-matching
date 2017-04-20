@@ -57,7 +57,7 @@ void setUp(){
   
   s9.c = 257;
   
-  s8.c = ')';
+  s8.c = 'a';
   s8.out = &s9;
   
   s7.c = 'a';
@@ -66,10 +66,10 @@ void setUp(){
   s6.c = 'b';
   s6.out  = &s7;
   
-  s5.c = '(';
+  s5.c = 'b';
   s5.out = &s6;
     
-  s4.c = ')';
+  s4.c = 'b';
   s4.out = &s5;
   
   s3.c = 'b';
@@ -78,7 +78,7 @@ void setUp(){
   s2.c = 'a';
   s2.out = &s3;
   
-  s1.c = '(';
+  s1.c = 'a';
   s1.out = &s2;
 }
 
