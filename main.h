@@ -27,11 +27,15 @@ struct ListEx{
 
 void setUp();
 
+void manageExpr(struct List *cList, int i, struct ListEx *eList, int a);
+
+void swap(struct List **cList, struct List **t, struct List **nList);
+
 void addState(struct List *l, struct State *s);
 
 struct List* startList(struct State *s, struct List *l);
 
-int match(struct List *cList, int c, struct List *nList,struct List *t, struct ListEx *eList, int a);
+void match(struct List *cList, int c, struct List *nList);
 
 int matched(struct List *l);
 
