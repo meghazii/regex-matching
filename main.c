@@ -56,7 +56,7 @@ void setUp(){
   //(ab)(ba)
   
   s9.c = 257;
-  
+  /*
   s8.c = 'a';
   s8.out = &s9;
   
@@ -64,22 +64,23 @@ void setUp(){
   s7.out = &s8;
   
   s6.c = 'b';
-  s6.out  = &s7;
+  s6.out  = &s7;*/
   
-  s5.c = 'b';
-  s5.out = &s6;
+  s5.c = 'a';
+  s5.out = &s1;
     
   s4.c = 'b';
   s4.out = &s5;
   
-  s3.c = 'b';
+  s3.c = 'a';
   s3.out = &s4;
 
-  s2.c = 'a';
-  s2.out = &s3;
+  s2.c = 'c';
+  s2.out = &s9;
   
-  s1.c = 'a';
+  s1.c = 256;
   s1.out = &s2;
+  s1.out1 = &s3;
 }
 
 void addState(struct List *l, struct State *s){
