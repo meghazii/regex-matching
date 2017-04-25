@@ -44,6 +44,17 @@ int main(int argc, char** argv){
   int test = 1, i = 0, compteur = 0;
 
   for(; *s; s++){
+    
+    printf("CLIST\n");
+    for(int h = 0; h < cList->n; h++){
+      printf("%c - ", cList->s[h]->c);
+    }
+    printf("\nNLIST\n");
+    for(int h = 0; h < nList->n; h++){
+      printf("%c - ",nList->s[h]->c);
+    }
+    printf("\n");
+
     do{
       test = 1;
       for(compteur = 0; compteur < cList->n; compteur++){
@@ -53,6 +64,7 @@ int main(int argc, char** argv){
 	  manageExpr(cList, compteur, &eList, i);
 	  listid++;
 	  nList->n = 0;
+	  printf("bite, %c\n", cList->s[compteur]->c);
 	  addState(nList, cList->s[compteur]->out);
 	  swap(&cList, &t, &nList);
 	}
@@ -75,7 +87,7 @@ int main(int argc, char** argv){
       }
     }
   }while(test == 0);
-
+  
   if(matched(cList) == 1){
     printf("Succes\n");
     printf("Expressions : \n");
@@ -97,7 +109,7 @@ void setUp(){
 
   s12.c = 257;
   
-  s11.c = ')';
+  /*s11.c = ')';
   s11.out = &s12;
   
   s10.c = 'b';
@@ -110,25 +122,26 @@ void setUp(){
   s8.out = &s9;
   
   s7.c = 'a';
-  s7.out = &s8;
+  s7.out = &s8;*/
   
-  s6.c = 'b';
-  s6.out = &s7;
+  s6.c = ')';
+  s6.out = &s1;
   
-  s5.c = '(';
+  s5.c = 'b';
   s5.out = &s6;
     
-  s4.c = ')';
+  s4.c = 'a';
   s4.out = &s5;
   
-  s3.c = 'b';
+  s3.c = '(';
   s3.out = &s4;
 
-  s2.c = 'a';
-  s2.out = &s3;
+  s2.c = 'c';
+  s2.out = &s12;
   
-  s1.c = '(';
+  s1.c = 256;
   s1.out = &s2;
+  s1.out1 = &s3;
 }
 
 void manageExpr(struct List *cList, int i, struct ListEx *eList, int a){
@@ -180,6 +193,7 @@ void match(struct List *cList, int c, struct List *nList){
   nList->n = 0;
   for(i = 0; i < cList->n; i++){
     if(cList->s[i]->c == c) {
+      printf("MATCH %c -- %c\n", cList->s[i]->c, c);
       addState(nList, cList->s[i]->out);
     }
   }
