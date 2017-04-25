@@ -72,16 +72,18 @@ int main(int argc, char** argv){
 	nList->n = 0;
 	addState(nList, cList->s[compteur]->out);
 	swap(&cList, &t, &nList);
-
       }
     }
   }while(test == 0);
 
-
   if(matched(cList) == 1){
     printf("Succes\n");
-    for(i = 0; i < eList.taille; i++){
-      printf("Expression %d -> %d\n", eList.e[i].debut, eList.e[i].fin);
+    printf("Expressions : \n");
+    for(i = 0; i < eList.taille ; i++){
+      for(compteur = eList.e[i].debut; compteur <= eList.e[i].fin; compteur++){
+	printf("%c", argv[1][compteur]);
+      }
+      printf("\n");
     }
   }
   else printf("Failure\n");
@@ -104,16 +106,16 @@ void setUp(){
   s9.c = 'a';
   s9.out = &s10;
 
-  s8.c = '(';
+  s8.c = 'b';
   s8.out = &s9;
   
-  s7.c = 'b';
+  s7.c = 'a';
   s7.out = &s8;
   
-  s6.c = 'a';
+  s6.c = 'b';
   s6.out = &s7;
   
-  s5.c = 'a';
+  s5.c = '(';
   s5.out = &s6;
     
   s4.c = ')';
