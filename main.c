@@ -44,17 +44,6 @@ int main(int argc, char** argv){
   int test = 1, i = 0, compteur = 0;
 
   for(; *s; s++){
-    
-    printf("CLIST\n");
-    for(int h = 0; h < cList->n; h++){
-      printf("%c - ", cList->s[h]->c);
-    }
-    printf("\nNLIST\n");
-    for(int h = 0; h < nList->n; h++){
-      printf("%c - ",nList->s[h]->c);
-    }
-    printf("\n");
-
     do{
       test = 1;
       for(compteur = 0; compteur < cList->n; compteur++){
@@ -64,11 +53,10 @@ int main(int argc, char** argv){
 	  manageExpr(cList, compteur, &eList, i);
 	  listid++;
 	  nList->n = 0;
-	  printf("bite, %c\n", cList->s[compteur]->c);
 	  addState(nList, cList->s[compteur]->out);
-	  swap(&cList, &t, &nList);
 	}
       }
+      swap(&cList, &t, &nList);
     }while(test == 0);
     match(cList, *s, nList);
     swap(&cList, &t, &nList);
@@ -193,7 +181,6 @@ void match(struct List *cList, int c, struct List *nList){
   nList->n = 0;
   for(i = 0; i < cList->n; i++){
     if(cList->s[i]->c == c) {
-      printf("MATCH %c -- %c\n", cList->s[i]->c, c);
       addState(nList, cList->s[i]->out);
     }
   }
