@@ -35,28 +35,37 @@ int main(int argc, char** argv){
   printf("%s\n",s);
   struct List *cList, *nList, *t;
   struct ListEx eList;
+  struct State etat;
   eList.taille = 0;
   eList.nUnclosed = 0;
 
   cList = startList(&s1, &l1);
   nList = &l2;
 
-  int test = 1, i = 0, compteur = 0;
+  int test = 1, test2 = 0, i = 0, compteur = 0;
 
-  for(; *s; s++){
+  for(; *s; s++){    
     do{
-      test = 1;
+      test = 1; test2 = 0;
       for(compteur = 0; compteur < cList->n; compteur++){
-
 	if(cList->s[compteur]->c == '(' || cList->s[compteur]->c == ')'){
 	  test = 0;
 	  manageExpr(cList, compteur, &eList, i);
 	  listid++;
 	  nList->n = 0;
 	  addState(nList, cList->s[compteur]->out);
+	  if(cList->s[compteur]->out->c != 256){
+	    test2 = 1;
+	    etat = *cList->s[compteur];
+	    cList->s[compteur] = nList->s[nList->n-1];
+	    nList->s[nList->n-1] = &etat;
+	  }
 	}
+
       }
-      swap(&cList, &t, &nList);
+      if(! test && ! test2){
+	swap(&cList, &t, &nList);
+      }
     }while(test == 0);
     match(cList, *s, nList);
     swap(&cList, &t, &nList);
