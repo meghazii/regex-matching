@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "main.h"
 
+struct State s13;
 struct State s12;
 struct State s11;
 struct State s10;
@@ -43,16 +44,21 @@ int main(int argc, char** argv){
   nList = &l2;
 
   int test = 1, test2 = 0, i = 0, compteur = 0;
-
   for(; *s; s++){    
     do{
+    
+
       test = 1; test2 = 0;
       for(compteur = 0; compteur < cList->n; compteur++){
 	if(cList->s[compteur]->c == '(' || cList->s[compteur]->c == ')'){
+	  //printf("YO\n"); 
 	  test = 0;
 	  manageExpr(cList, compteur, &eList, i);
 	  listid++;
 	  nList->n = 0;
+	  /*printf("ACTUEL : %c\n", cList->s[compteur]->c);
+	  
+	    printf("NEXT : %d\n", cList->s[compteur]->out->c);*/
 	  addState(nList, cList->s[compteur]->out);
 	  if(cList->s[compteur]->out->c != 256){
 	    test2 = 1;
@@ -60,6 +66,10 @@ int main(int argc, char** argv){
 	    cList->s[compteur] = nList->s[nList->n-1];
 	    nList->s[nList->n-1] = &etat;
 	  }
+	  /*for(int t = 0; t < cList->n; t++){
+	    printf("CLIST : %c\n", cList->s[t]->c);}
+	  for(int t = 0; t < nList->n; t++){
+	  printf("NLIST : %c\n", nList->s[t]->c);}*/
 	}
 
       }
@@ -67,6 +77,7 @@ int main(int argc, char** argv){
 	swap(&cList, &t, &nList);
       }
     }while(test == 0);
+    //printf("Salut\n");
     match(cList, *s, nList);
     swap(&cList, &t, &nList);
     i++;
@@ -104,22 +115,27 @@ void setUp(){
   //AUTOMATE TEST
   //(ab)(ba)
 
-  s12.c = 257;
+  s13.c = 257;
   
-  /*s11.c = ')';
-  s11.out = &s12;
+  /* s12.c = ')';
+  s12.out = &s1;
   
-  s10.c = 'b';
-  s10.out = &s11;
+  s11.c = 25;
+  s11.out = &s9;
+  s11.out1 = &s12;
   
-  s9.c = 'a';
-  s9.out = &s10;
+  s10.c = ')';
+  s10.out = &s1;
+  
+  s9.c = 'b';
+  s9.out = &s11;
 
-  s8.c = 'b';
-  s8.out = &s9;
+  s8.c = ')';
+  s8.out = &s1;
   
-  s7.c = 'a';
-  s7.out = &s8;*/
+  s7.c = 256;
+  s7.out = &s8;
+  s7.out1 = &s4;*/
   
   s6.c = ')';
   s6.out = &s1;
@@ -134,7 +150,7 @@ void setUp(){
   s3.out = &s4;
 
   s2.c = 'c';
-  s2.out = &s12;
+  s2.out = &s13;
   
   s1.c = 256;
   s1.out = &s2;
