@@ -16,20 +16,19 @@ struct State s3;
 struct State s2;
 struct State s1;
 
-int listid = 0;
+int listid = 0, N  = 13;
 struct List l1, l2; //liste pré-alloué
 
 int main(int argc, char** argv){
   //Initialise les listes
   //lance match pour chacun des caracteres de la chaine a tester
-  
   if(argc <= 1){
     printf("Invalid Argument\n");
     exit(-1);
   }
   l1.n = 0; l2.n = 0;
-  l1.s = malloc(256 * sizeof(struct State));
-  l2.s = malloc(256 * sizeof(struct State));
+  l1.s = malloc(N * sizeof(struct State *));
+  l2.s = malloc(N * sizeof(struct State *));
   
   setUp();
   char *s = argv[1];
@@ -43,58 +42,18 @@ int main(int argc, char** argv){
   cList = startList(&s1, &l1);
   nList = &l2;
 
-  int test = 1, test2 = 0, i = 0, compteur = 0;
-  for(; *s; s++){    
-    do{
-    
-
-      test = 1; test2 = 0;
-      for(compteur = 0; compteur < cList->n; compteur++){
-	if(cList->s[compteur]->c == '(' || cList->s[compteur]->c == ')'){
-	  //printf("YO\n"); 
-	  test = 0;
-	  manageExpr(cList, compteur, &eList, i);
-	  listid++;
-	  nList->n = 0;
-	  /*printf("ACTUEL : %c\n", cList->s[compteur]->c);
-	  
-	    printf("NEXT : %d\n", cList->s[compteur]->out->c);*/
-	  addState(nList, cList->s[compteur]->out);
-	  if(cList->s[compteur]->out->c != 256){
-	    test2 = 1;
-	    etat = *cList->s[compteur];
-	    cList->s[compteur] = nList->s[nList->n-1];
-	    nList->s[nList->n-1] = &etat;
-	  }
-	  /*for(int t = 0; t < cList->n; t++){
-	    printf("CLIST : %c\n", cList->s[t]->c);}
-	  for(int t = 0; t < nList->n; t++){
-	  printf("NLIST : %c\n", nList->s[t]->c);}*/
-	}
-
-      }
-      if(! test && ! test2){
-	swap(&cList, &t, &nList);
-      }
-    }while(test == 0);
-    //printf("Salut\n");
-    match(cList, *s, nList);
-    swap(&cList, &t, &nList);
+  int i = 0, compteur = 0,  done = 0;
+  int x = 0;
+  for(; *s; s++){
+    printf("START --> %c\n", *s);
+    done = 0;
+    while(done == 0){
+      done = match(cList, *s, nList, &eList,i);
+      swap(&cList, &t, &nList);
+    }
+    if(done == -1) break;
     i++;
   }
-  do{
-    test = 1;
-    for(compteur = 0; compteur < cList->n; compteur++){
-      if(cList->s[compteur]-> c == '(' || cList->s[compteur]-> c == ')'){
-	test = 0;
-	manageExpr(cList, compteur, &eList, i);
-	listid++;
-	nList->n = 0;
-	addState(nList, cList->s[compteur]->out);
-	swap(&cList, &t, &nList);
-      }
-    }
-  }while(test == 0);
   
   if(matched(cList) == 1){
     printf("Succes\n");
@@ -105,6 +64,7 @@ int main(int argc, char** argv){
       }
       printf("\n");
     }
+    
   }
   else printf("Failure\n");
   return 0;
@@ -113,58 +73,75 @@ int main(int argc, char** argv){
 
 void setUp(){
   //AUTOMATE TEST
-  //(ab)(ba)
+  //(ab)*c
 
-  s13.c = 257;
+  //s13.c = 257;
   
   /* s12.c = ')';
-  s12.out = &s1;
+     s12.out = &s1;
   
-  s11.c = 25;
-  s11.out = &s9;
-  s11.out1 = &s12;
+     s11.c = 25;
+     s11.out = &s9;
+     s11.out1 = &s12;
   
-  s10.c = ')';
-  s10.out = &s1;
+     s10.c = ')';
+     s10.out = &s1;
   
-  s9.c = 'b';
-  s9.out = &s11;
+     s9.c = 'b';
+     s9.out = &s11;
 
-  s8.c = ')';
-  s8.out = &s1;
+     s8.c = ')';
+     s8.out = &s1;
   
-  s7.c = 256;
-  s7.out = &s8;
-  s7.out1 = &s4;*/
+     s7.c = 256;
+     s7.out = &s8;
+     s7.out1 = &s4;
   
-  s6.c = ')';
-  s6.out = &s1;
-  
-  s5.c = 'b';
-  s5.out = &s6;
-    
-  s4.c = 'a';
-  s4.out = &s5;
-  
-  s3.c = '(';
-  s3.out = &s4;
+     for(int i = 0; i < 257; i++)
+     s6.c[i] = NULL;
+  */
+  for(int i = 0; i < 257; i++)
+    s5.c[i] = NULL;
 
-  s2.c = 'c';
-  s2.out = &s13;
+  s5.n = 5;
+  s5.c[256] = &s5;
   
-  s1.c = 256;
-  s1.out = &s2;
-  s1.out1 = &s3;
+  /*  for(int i = 0; i < 257; i++)
+    s4.c[i] = NULL;
+
+  s4.n = 4;
+  s4.c[')'] = &s1;
+  
+  for(int i = 0; i < 257; i++)
+    s3.c[i] = NULL;
+
+  s3.n = 3;
+  s3.c['b'] = &s4;*/
+  
+  for(int i = 0; i < 257; i++)
+    s2.c[i] = NULL;
+
+  s2.n = 2;
+  s2.c['a'] = &s2;
+  s2.c['b'] = &s2;
+  s2.c[')'] = &s1;
+  
+  for(int i = 0; i < 257; i++)
+    s1.c[i] = NULL;
+
+  s1.n = 1;
+  s1.c['('] = &s2;
+  s1.c['c'] = &s5;
 }
 
-void manageExpr(struct List *cList, int i, struct ListEx *eList, int a){
-  if(cList->s[i]->c == '('){
+void manageExpr(struct List *cList, struct ListEx *eList, int a, int b){
+  if(! b){
     eList->e[eList->taille].debut = a;
     eList->unclosed[eList->nUnclosed] = eList->taille;
     eList->taille++;
     eList->nUnclosed++;
   }
-  else if(cList->s[i]->c == ')'){
+  else if(b){
     eList->e[eList->unclosed[eList->nUnclosed-1]].fin = a-1;
     eList->nUnclosed--;
   }
@@ -182,11 +159,6 @@ void addState(struct List *l, struct State *s){
   // si l'etat correspond a un split : ajoute a la liste les etats suivants le split
   if(s == NULL || s->lastlist == listid) return;
   s->lastlist = listid;
-  if(s->c == 256){
-    addState(l,s->out);
-    addState(l,s->out1);
-    return;
-  }
   l->s[l->n++] = s;
 }
 
@@ -198,17 +170,29 @@ struct List* startList(struct State *s, struct List *l){
   return l;
 }
 
-void match(struct List *cList, int c, struct List *nList){
+int match(struct List *cList, int c, struct List *nList, struct ListEx *eList, int a){
   //ajoute les etats suivants de chacun des etats de la liste actuelle a la liste suivant
   // ssi le caractere c correspond au caractere de l'etat actuel
-  int i = 0;
+  int i = 0, done = -1;
   listid++;
   nList->n = 0;
   for(i = 0; i < cList->n; i++){
-    if(cList->s[i]->c == c) {
-      addState(nList, cList->s[i]->out);
+    if(cList->s[i]->c['('] != NULL){
+      done = 0;
+      manageExpr(cList, eList, a, 0);
+      addState(nList, cList->s[i]->c['(']);
+    }
+    if(cList->s[i]->c[')'] != NULL){
+      done = 0;
+      manageExpr(cList, eList, a, 1);
+      addState(nList, cList->s[i]->c[')']);
+    }
+    if(cList->s[i]->c[c] != NULL) {
+      done = 1;
+      addState(nList, cList->s[i]->c[c]);
     }
   }
+  return done;
 }
 
 
@@ -217,7 +201,7 @@ int matched(struct List *l){
   // Si c'est le cas, alors un des chemin aura atteint l'etat final et l'automate a donc reconnu la chaine de caractere
   int i = 0;
   for(i = 0; i < l->n; i++){
-    if(l->s[i]->c == 257){
+    if(l->s[i]->c[256] == &s5){
       return 1;
     }
   }
