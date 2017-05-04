@@ -3,7 +3,7 @@
 
 struct State{
   int n;
-  struct State *c[257];
+  struct List *c[257];
   int lastlist;
 };
 
@@ -26,11 +26,11 @@ struct ListEx{
 
 void setUp();
 
-void manageExpr(struct List *cList, struct ListEx *eList, int a, int b);
+void manageExpr(struct ListEx *eList, int pos, int bool);
 
 void swap(struct List **cList, struct List **t, struct List **nList);
 
-void addState(struct List *l, struct State *s);
+void addState(struct List *l, struct List *l2);
 
 struct List* startList(struct State *s, struct List *l);
 
