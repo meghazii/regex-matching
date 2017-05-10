@@ -3,17 +3,36 @@
 #include <stdbool.h>
 
 #include "main.h"
-#include "lisp.h"
+#include "../../emacs/src/lisp.h"
 
 int main(){
 
+  
+  
   return 0;
 }
 
-
-_Bool testDFA(Vector x)
+void addState()
 {
-  INTEGERP(x);
 }
+
+void start()
+{
+}
+
+void match()
+{
+}
+
+_Bool is_DFA(Vector x)
+{
+  if(INTEGERP(x)) return true;
+}
+
+void function()
+{
+  
+}
+
 
 
