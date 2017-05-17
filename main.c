@@ -8,14 +8,46 @@ int main(){
   return 0;
 }
 
-int NFA_matching ()
+int
+NFA_matching (Lisp_Object cMap, int ncc, Lisp_Object c, int cState, Lisp_Object array)
 {
-  
+  DEFSYM ("if", Qif); DEFSYM ("Or", Qor); DEFSYM ("mark", Qmark);
+  Lis_Object cc = Faref (cMap, c);
+  if (! INTEGERP(cc))
+    {
+      error (" plopv2");
+    }
+  int cc1 = XINT(cc);
+  Lisp_Object tmp = AREF (array, cState*ncc + cc1);
+
+  if (cc1 >= ncc)
+    {
+      error ("plopv2 2");
+    }
+  if (INTEGERP (tmp))
+    {
+    }
+  else if (CONSP (tmp))
+    {
+      if (EQ (XCAR (tmp), Qif))
+	{
+	}
+      else if (EQ (XCAR (tmp), Qor))
+	{
+	}
+      else if (EQ (XCAR (tmp), Qmark))
+	{
+	}
+    }
+  else
+    {
+    }
 }
 
 int
 DFA_Mark (Lisp_Object cMap, int ncc, Lisp_Object c, int cState, Lisp_Object array)
 {
+  DEFSYM("mark", Qmark);
   Lisp_Object cc = Faref (cMap, c);
   if (! INTEGERP(cc))
     {
@@ -32,9 +64,9 @@ DFA_Mark (Lisp_Object cMap, int ncc, Lisp_Object c, int cState, Lisp_Object arra
     {
       return XINT (tmp);
     }
-  else if (CONSP(tmp))
+  else if (CONSP (tmp))
     {
-      if (XCAR (tmp) == Qmark)
+      if (EQ (XCAR (tmp), Qmark)
 	{
 	  save (XCAR (XCDR (tmp)));
 	  DFA_Mark (cMap, ncc, c, cState, array);
