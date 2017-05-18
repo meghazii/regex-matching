@@ -52,7 +52,7 @@ int main(int argc, char** argv){
 
 
 void setUp(){
-é  //AUTOMATE TEST
+  //AUTOMATE TEST
   //(ab)(ba)
   
   s9.c = 257;
